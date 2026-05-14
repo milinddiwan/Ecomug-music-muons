@@ -1,0 +1,10 @@
+*.o
+*.mod
+*~
+\#*
+.\#*
+muon_range
+a.out
+test
+tstm
+test_corgen
