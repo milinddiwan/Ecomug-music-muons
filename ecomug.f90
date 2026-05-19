@@ -10,7 +10,8 @@ module ecomug_mod
     !        flux in muons m^-2 sr^-1 s^-1 (GeV/c)^-1.
     implicit none
     private
-    public :: dalt_flux, dmu_shallow, gen_horiz, gen_vert
+    public :: dalt_flux, dmu_shallow, gen_horiz, gen_vert, &
+              gen_horiz_init, gen_horiz_step
 
     real(8), parameter :: PI        = 3.141592653589793d0
     ! Average ionisation loss averaged over 10 and 100 GeV (apar values from notebook)
@@ -184,5 +185,33 @@ contains
             phi_rel_arr(i) = asin(2.0d0 * u - 1.0d0)
         end do
     end subroutine gen_vert
+
+    ! ------------------------------------------------------------------
+    subroutine gen_horiz_init(depth_m, nwarmup, s_p, s_x, s_f)
+        ! Warm up the horizontal-surface Metropolis chain and return its state.
+        ! Call once; then drive event-by-event with gen_horiz_step.
+        real(8), intent(in)  :: depth_m
+        integer, intent(in)  :: nwarmup
+        real(8), intent(out) :: s_p, s_x, s_f
+        integer :: i
+        s_p = 1.0d0;  s_x = 0.999d0
+        s_f = horpdf_val(s_p, s_x, depth_m)
+        do i = 1, nwarmup
+            call metro_step(s_p, s_x, s_f, 1, depth_m)
+        end do
+    end subroutine gen_horiz_init
+
+    subroutine gen_horiz_step(depth_m, s_p, s_x, s_f, pmu, cth, phi)
+        ! Advance the chain by one step and return one muon's kinematics.
+        ! s_p, s_x, s_f are updated in place (persistent chain state).
+        real(8), intent(in)    :: depth_m
+        real(8), intent(inout) :: s_p, s_x, s_f
+        real(8), intent(out)   :: pmu, cth, phi
+        real(8) :: u
+        call metro_step(s_p, s_x, s_f, 1, depth_m)
+        pmu = s_p;  cth = s_x
+        call random_number(u)
+        phi = u * 2.0d0 * PI
+    end subroutine gen_horiz_step
 
 end module ecomug_mod
