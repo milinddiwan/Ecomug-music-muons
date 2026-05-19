@@ -1,0 +1,296 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.3' *)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell["Read and Analyse muons_200m.dat", "Section"],
+
+Cell[TextData[{
+ "Read the output of the MUSIC muon-propagation simulation through 200 m of \
+water, extract column variables, compute derived quantities, and display \
+kinematic distributions."
+}], "Text"],
+
+(* ------------------------------------------------------------------ *)
+Cell["\<\
+Step 1 \[LongDash] Import the data table (skip comment lines starting with #)\
+\>", "Subsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"data", " ", "=", " ",
+   RowBox[{"Import", "[",
+    RowBox[{"\"\<muons_200m.dat\>\"", ",", " ", "\"\<Table\>\"", ",", " ",
+     RowBox[{"\"\<CommentStyle\>\"", " ", "->", " ", "\"\<#\>\""}]}],
+    "]"}]}], ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"n", " ", "=", " ",
+   RowBox[{"Length", "[", "data", "]"}]}], ";"}], "\[IndentingNewLine]",
+ RowBox[{"Print", "[",
+  RowBox[{"\"\<Loaded \>\"", ",", " ", "n", ",",
+   " ", "\"\< surviving muons\>\""}], "]"}]}], "Input"],
+
+(* ------------------------------------------------------------------ *)
+Cell["\<\
+Step 2 \[LongDash] Assign named column variables\
+\>", "Subsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"pmu0", " ", "=", " ",
+   RowBox[{"Part", "[",
+    RowBox[{"data", ",", " ", "All", ",", " ", "1"}], "]"}]}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"cth0", " ", "=", " ",
+   RowBox[{"Part", "[",
+    RowBox[{"data", ",", " ", "All", ",", " ", "2"}], "]"}]}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"phi0", " ", "=", " ",
+   RowBox[{"Part", "[",
+    RowBox[{"data", ",", " ", "All", ",", " ", "3"}], "]"}]}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"emuf", " ", "=", " ",
+   RowBox[{"Part", "[",
+    RowBox[{"data", ",", " ", "All", ",", " ", "4"}], "]"}]}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"xf", " ", "=", " ",
+   RowBox[{"Part", "[",
+    RowBox[{"data", ",", " ", "All", ",", " ", "5"}], "]"}]}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"yf", " ", "=", " ",
+   RowBox[{"Part", "[",
+    RowBox[{"data", ",", " ", "All", ",", " ", "6"}], "]"}]}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"zf", " ", "=", " ",
+   RowBox[{"Part", "[",
+    RowBox[{"data", ",", " ", "All", ",", " ", "7"}], "]"}]}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"cxf", " ", "=", " ",
+   RowBox[{"Part", "[",
+    RowBox[{"data", ",", " ", "All", ",", " ", "8"}], "]"}]}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"cyf", " ", "=", " ",
+   RowBox[{"Part", "[",
+    RowBox[{"data", ",", " ", "All", ",", " ", "9"}], "]"}]}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"czf", " ", "=", " ",
+   RowBox[{"Part", "[",
+    RowBox[{"data", ",", " ", "All", ",", " ", "10"}], "]"}]}],
+  ";"}]}], "Input"],
+
+(* ------------------------------------------------------------------ *)
+Cell["\<\
+Step 3 \[LongDash] Derived quantities\
+\>", "Subsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"rlat", " ", "=", " ",
+   RowBox[{
+    RowBox[{"Sqrt", "[",
+     RowBox[{
+      RowBox[{"xf", "^", "2"}], " ", "+", " ",
+      RowBox[{"yf", "^", "2"}]}], "]"}], " ", "/", " ", "100."}]}],
+  ";", " "}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"th0", " ", "=", " ",
+   RowBox[{
+    RowBox[{"ArcCos", "[", "cth0", "]"}], " ", "*", " ",
+    RowBox[{"180.", " ", "/", " ", "\[Pi]"}]}]}], ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"thf", " ", "=", " ",
+   RowBox[{
+    RowBox[{"ArcCos", "[",
+     RowBox[{"Clip", "[",
+      RowBox[{"czf", ",", " ",
+       RowBox[{"{",
+        RowBox[{
+         RowBox[{"-", "1."}], ",", " ", "1."}], "}"}]}], "]"}], "]"}], " ", "*",
+    " ",
+    RowBox[{"180.", " ", "/", " ", "\[Pi]"}]}]}], ";"}]}], "Input"],
+
+(* ------------------------------------------------------------------ *)
+Cell["\<\
+Step 4 \[LongDash] Summary statistics\
+\>", "Subsection"],
+
+Cell[BoxData[
+ RowBox[{"TableForm", "[", "\[IndentingNewLine]",
+  RowBox[{
+   RowBox[{"{",
+    RowBox[{
+     RowBox[{"{",
+      RowBox[{
+       "\"\<Quantity\>\"", ",", " ", "\"\<Min\>\"", ",", " ",
+       "\"\<Mean\>\"", ",", " ", "\"\<Max\>\""}], "}"}], ",",
+     "\[IndentingNewLine]",
+     RowBox[{"{",
+      RowBox[{
+       "\"\<pmu0 [GeV/c]\>\"", ",", " ",
+       RowBox[{"Min", "[", "pmu0", "]"}], ",", " ",
+       RowBox[{"Mean", "[", "pmu0", "]"}], ",", " ",
+       RowBox[{"Max", "[", "pmu0", "]"}]}], "}"}], ",",
+     "\[IndentingNewLine]",
+     RowBox[{"{",
+      RowBox[{
+       "\"\<emu_f [GeV]\>\"", ",", " ",
+       RowBox[{"Min", "[", "emuf", "]"}], ",", " ",
+       RowBox[{"Mean", "[", "emuf", "]"}], ",", " ",
+       RowBox[{"Max", "[", "emuf", "]"}]}], "}"}], ",",
+     "\[IndentingNewLine]",
+     RowBox[{"{",
+      RowBox[{
+       "\"\<theta_0 [deg]\>\"", ",", " ",
+       RowBox[{"Min", "[", "th0", "]"}], ",", " ",
+       RowBox[{"Mean", "[", "th0", "]"}], ",", " ",
+       RowBox[{"Max", "[", "th0", "]"}]}], "}"}], ",",
+     "\[IndentingNewLine]",
+     RowBox[{"{",
+      RowBox[{
+       "\"\<r_lat [m]\>\"", ",", " ",
+       RowBox[{"Min", "[", "rlat", "]"}], ",", " ",
+       RowBox[{"Mean", "[", "rlat", "]"}], ",", " ",
+       RowBox[{"Max", "[", "rlat", "]"}]}], "}"}], ",",
+     "\[IndentingNewLine]",
+     RowBox[{"{",
+      RowBox[{
+       "\"\<theta_f [deg]\>\"", ",", " ",
+       RowBox[{"Min", "[", "thf", "]"}], ",", " ",
+       RowBox[{"Mean", "[", "thf", "]"}], ",", " ",
+       RowBox[{"Max", "[", "thf", "]"}]}], "}"}]}], "\[IndentingNewLine]",
+    "}"}], ",", " ",
+   RowBox[{"TableHeadings", " ", "->", " ",
+    RowBox[{"{",
+     RowBox[{"None", ",", " ", "None"}], "}"}]}]}],
+  "\[IndentingNewLine]", "]"}]], "Input"],
+
+(* ------------------------------------------------------------------ *)
+Cell["\<\
+Step 5 \[LongDash] Kinematic distributions\
+\>", "Subsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"p1", " ", "=", " ",
+   RowBox[{"Histogram", "[",
+    RowBox[{"pmu0", ",", " ", "40", ",", " ", "\"\<Count\>\"", ",", " ",
+     RowBox[{"PlotLabel", " ", "->", " ",
+      "\"\<Initial momentum\>\""}], ",", " ",
+     RowBox[{"AxesLabel", " ", "->", " ",
+      RowBox[{"{",
+       RowBox[{
+        "\"\<p\[Subscript]0 [GeV/c]\>\"", ",", " ", "\"\<Counts\>\""}],
+       "}"}]}], ",", " ",
+     RowBox[{"PlotStyle", " ", "->", " ",
+      RowBox[{"Directive", "[",
+       RowBox[{
+        RowBox[{"RGBColor", "[",
+         RowBox[{"0.27", ",", "0.51", ",", "0.71"}], "]"}], ",", " ",
+        RowBox[{"Opacity", "[", "0.75", "]"}]}], "]"}]}]}], "]"}]}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"p2", " ", "=", " ",
+   RowBox[{"Histogram", "[",
+    RowBox[{"emuf", ",", " ", "50", ",", " ", "\"\<Count\>\"", ",", " ",
+     RowBox[{"PlotLabel", " ", "->", " ",
+      "\"\<Final energy at 200 m depth\>\""}], ",", " ",
+     RowBox[{"AxesLabel", " ", "->", " ",
+      RowBox[{"{",
+       RowBox[{
+        "\"\<E\[Subscript]f [GeV]\>\"", ",", " ", "\"\<Counts\>\""}],
+       "}"}]}], ",", " ",
+     RowBox[{"PlotStyle", " ", "->", " ",
+      RowBox[{"Directive", "[",
+       RowBox[{
+        RowBox[{"RGBColor", "[",
+         RowBox[{"0.84", ",", "0.15", ",", "0.16"}], "]"}], ",", " ",
+        RowBox[{"Opacity", "[", "0.75", "]"}]}], "]"}]}]}], "]"}]}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"p3", " ", "=", " ",
+   RowBox[{"Histogram", "[",
+    RowBox[{"th0", ",", " ",
+     RowBox[{"{",
+      RowBox[{"0", ",", " ", "90", ",", " ", "2"}], "}"}], ",", " ",
+     "\"\<Count\>\"", ",", " ",
+     RowBox[{"PlotLabel", " ", "->", " ",
+      "\"\<Initial zenith angle\>\""}], ",", " ",
+     RowBox[{"AxesLabel", " ", "->", " ",
+      RowBox[{"{",
+       RowBox[{
+        "\"\<\[Theta]\[Subscript]0 [deg]\>\"", ",", " ", "\"\<Counts\>\""}],
+       "}"}]}], ",", " ",
+     RowBox[{"PlotStyle", " ", "->", " ",
+      RowBox[{"Directive", "[",
+       RowBox[{
+        RowBox[{"RGBColor", "[",
+         RowBox[{"0.17", ",", "0.63", ",", "0.17"}], "]"}], ",", " ",
+        RowBox[{"Opacity", "[", "0.75", "]"}]}], "]"}]}]}], "]"}]}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{
+  RowBox[{"p4", " ", "=", " ",
+   RowBox[{"Histogram", "[",
+    RowBox[{"rlat", ",", " ", "50", ",", " ", "\"\<Count\>\"", ",", " ",
+     RowBox[{"PlotLabel", " ", "->", " ",
+      "\"\<Lateral displacement at 200 m\>\""}], ",", " ",
+     RowBox[{"AxesLabel", " ", "->", " ",
+      RowBox[{"{",
+       RowBox[{"\"\<r [m]\>\"", ",", " ", "\"\<Counts\>\""}], "}"}]}], ",",
+     " ",
+     RowBox[{"PlotStyle", " ", "->", " ",
+      RowBox[{"Directive", "[",
+       RowBox[{
+        RowBox[{"RGBColor", "[",
+         RowBox[{"0.58", ",", "0.40", ",", "0.74"}], "]"}], ",", " ",
+        RowBox[{"Opacity", "[", "0.75", "]"}]}], "]"}]}]}], "]"}]}],
+  ";"}], "\[IndentingNewLine]",
+ RowBox[{"GraphicsGrid", "[",
+  RowBox[{
+   RowBox[{"{",
+    RowBox[{
+     RowBox[{"{",
+      RowBox[{"p1", ",", " ", "p2"}], "}"}], ",", " ",
+     RowBox[{"{",
+      RowBox[{"p3", ",", " ", "p4"}], "}"}]}], "}"}], ",", " ",
+   RowBox[{"ImageSize", " ", "->", " ", "800"}], ",", " ",
+   RowBox[{"Spacings", " ", "->", " ",
+    RowBox[{"{",
+     RowBox[{"0", ",", " ", "20"}], "}"}]}]}], "]"}]}], "Input"],
+
+(* ------------------------------------------------------------------ *)
+Cell["\<\
+Step 6 \[LongDash] Export combined figure\
+\>", "Subsection"],
+
+Cell[BoxData[
+ RowBox[{"Export", "[",
+  RowBox[{"\"\<muon_distributions.pdf\>\"", ",", " ",
+   RowBox[{"GraphicsGrid", "[",
+    RowBox[{
+     RowBox[{"{",
+      RowBox[{
+       RowBox[{"{",
+        RowBox[{"p1", ",", " ", "p2"}], "}"}], ",", " ",
+       RowBox[{"{",
+        RowBox[{"p3", ",", " ", "p4"}], "}"}]}], "}"}], ",", " ",
+     RowBox[{"ImageSize", " ", "->", " ", "800"}], ",", " ",
+     RowBox[{"Spacings", " ", "->", " ",
+      RowBox[{"{",
+       RowBox[{"0", ",", " ", "20"}], "}"}]}]}], "]"}]}], "]"}]], "Input"]
+
+}]
+(* End of Notebook Content *)

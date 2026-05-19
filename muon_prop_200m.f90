@@ -38,7 +38,7 @@ program muon_prop_200m
     implicit none
 
     integer,  parameter :: N_TARGET     = 10000     ! stop after this many survivors
-    integer,  parameter :: NWARMUP      = 5000      ! Metropolis burn-in steps
+    integer,  parameter :: NWARMUP      = 50000     ! Metropolis burn-in steps
     real(8),  parameter :: DEPTH_M      = 200.0d0   ! vertical depth [m]
     real(8),  parameter :: MU_MASS      = 0.105655d0! muon rest mass [GeV]
     real(8),  parameter :: AAVE         = 2.305d0   ! ionisation loss [MeV/(g/cm^2)]

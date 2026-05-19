@@ -21,7 +21,7 @@ module ecomug_mod
     real(8), parameter :: DP_STEP   = 10.0d0    ! GeV/c
     real(8), parameter :: DCT_STEP  = 0.10d0    ! dimensionless
     ! Hard generation boundaries
-    real(8), parameter :: PMU_LO = 1.0d0,  PMU_HI = 100.0d0
+    real(8), parameter :: PMU_LO = 1.0d0,  PMU_HI = 2000.0d0
     real(8), parameter :: CTH_LO = 0.0d0,  CTH_HI = 1.0d0
 
 contains
@@ -104,7 +104,7 @@ contains
         call random_number(dp);  dp = (dp - 0.5d0) * DP_STEP
         call random_number(dx);  dx = (dx - 0.5d0) * DCT_STEP
         new_p = cur_p + dp
-        new_x = min(cur_x + dx, CTH_HI)   ! clamp: avoid sqrt(1-x^2) for x > 1
+        new_x = cur_x + dx
 
         if (pdf_id == 1) then
             new_f = horpdf_val(new_p, new_x, depth_m)
