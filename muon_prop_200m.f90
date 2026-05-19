@@ -36,8 +36,9 @@ program muon_prop_200m
     real(8),  parameter :: DEPTH_M  = 200.0d0        ! vertical depth [m]
     real(8),  parameter :: PI       = 3.141592653589793d0
     real(8),  parameter :: MU_MASS  = 0.105655d0     ! muon rest mass [GeV]
+    ! Average ionisation energy loss (same value as in ecomug_mod)
+    real(8),  parameter :: AAVE     = 2.305d0        ! MeV / (g/cm^2)
     ! Minimum cos(theta) accepted: avoids unreachably large slant depths
-    ! (near-horizontal muons < 1 GeV at this low cos(theta) can never reach 200 m anyway)
     real(8),  parameter :: CTH_MIN_PROP = 0.02d0
     character(len=*), parameter :: MEDIUM  = 'water'
     character(len=*), parameter :: OUTFILE = 'muons_200m.dat'
@@ -52,7 +53,7 @@ program muon_prop_200m
     real(8) :: pmu0, cth0, phi0, sth0
     real(8) :: x, y, z, cx, cy, cz, emu, ttime, depth_max
 
-    integer :: i, n_survive, iout
+    integer :: i, n_survive, n_above_thr, iout
 
     integer :: iseed(8) = [72889, 64746, 45, 567, 72828, 27282, 83838, 28293]
 
@@ -81,7 +82,8 @@ program muon_prop_200m
 
     ! ---- Propagation loop ----------------------------------------------
     write(*, '(a)', advance='no') '  Propagating    ... '
-    n_survive = 0
+    n_survive   = 0
+    n_above_thr = 0
 
     do i = 1, N_MU
 
@@ -92,17 +94,24 @@ program muon_prop_200m
         ! Skip near-horizontal muons: they can never reach the vertical depth
         if (cth0 < CTH_MIN_PROP) cycle
 
-        sth0 = sqrt(max(0.0d0, 1.0d0 - cth0*cth0))
-
         ! Slant path to the 200 m vertical plane: L = depth / cos(theta)
         depth_max = (DEPTH_M / cth0) * 100.0d0   ! [cm]
+        emu       = sqrt(pmu0*pmu0 + MU_MASS*MU_MASS)   ! total energy [GeV]
+
+        ! Pre-cut: discard muons whose total energy is below the ionisation-only
+        ! energy loss along the full slant path.  Such muons cannot reach the
+        ! detector plane regardless of fluctuations, so MUSIC would always stop them.
+        !   E_loss [GeV] = AAVE [MeV/(g/cm^2)] * rho [g/cm^3] * L [cm] * 1e-3
+        if (emu < AAVE * n_rho * depth_max * 1.0d-3) cycle
+        n_above_thr = n_above_thr + 1
+
+        sth0 = sqrt(max(0.0d0, 1.0d0 - cth0*cth0))
 
         ! Start at the surface (origin), muon going downward
         x  = 0.0d0;  y  = 0.0d0;  z  = 0.0d0
         cx = sth0 * cos(phi0)
         cy = sth0 * sin(phi0)
         cz = cth0
-        emu   = sqrt(pmu0*pmu0 + MU_MASS*MU_MASS)   ! total energy [GeV]
         ttime = 0.0d0
 
         call muon_transport(x, y, z, cx, cy, cz, emu, depth_max, ttime)
@@ -122,8 +131,11 @@ program muon_prop_200m
 
     ! ---- Summary -------------------------------------------------------
     write(*, '(/, a, i0, a, i0, a, f5.1, a)') &
-        '  Survived : ', n_survive, ' / ', N_MU, &
-        '  (', 100.0d0 * n_survive / N_MU, ' %)'
-    write(*, '(a, a, /)') '  Output   : ', OUTFILE
+        '  Above E_min : ', n_above_thr, ' / ', N_MU, &
+        '  (', 100.0d0 * n_above_thr / N_MU, ' %)  [passed pre-cut]'
+    write(*, '(a, i0, a, i0, a, f5.1, a)') &
+        '  Survived    : ', n_survive, ' / ', N_MU, &
+        '  (', 100.0d0 * n_survive / N_MU, ' %)  [reached 200 m]'
+    write(*, '(a, a, /)') '  Output      : ', OUTFILE
 
 end program muon_prop_200m
