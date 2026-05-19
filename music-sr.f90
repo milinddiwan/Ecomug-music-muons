@@ -108,7 +108,7 @@ subroutine initialize_music(medium)
     read(4, 99) emulo
  99 format(16(5E12.5/),E12.5/)
     close(4)
-c    write(6, 99) emulo
+!    write(6, 99) emulo
 
     ! Inelastic double-differential cross-section table (bilinear in E, v, angle):
     !   ema(61)       log10(E_mu/GeV),  0.0 to  6.0, step 0.1
