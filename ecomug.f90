@@ -94,15 +94,17 @@ contains
 
     ! ------------------------------------------------------------------
     subroutine metro_step(cur_p, cur_x, cur_f, pdf_id, depth_m)
-        ! One Metropolis-Hastings step with a symmetric uniform-box proposal.
+        ! One Metropolis-Hastings step with a symmetric normal proposal.
         ! pdf_id = 1 -> horpdf_val,  2 -> vertpdf_val
         real(8), intent(inout) :: cur_p, cur_x, cur_f
         integer, intent(in)    :: pdf_id
         real(8), intent(in)    :: depth_m
         real(8) :: dp, dx, new_p, new_x, new_f, u
+        real(8) :: rn(2)
 
-        call random_number(dp);  dp = (dp - 0.5d0) * DP_STEP
-        call random_number(dx);  dx = (dx - 0.5d0) * DCT_STEP
+        call randn(2, rn)
+        dp = rn(1) * DP_STEP
+        dx = rn(2) * DCT_STEP
         new_p = cur_p + dp
         new_x = cur_x + dx
 
