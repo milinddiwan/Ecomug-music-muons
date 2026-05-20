@@ -9,7 +9,7 @@ OBJS    = randn.o      \
           music-sr.o   \
           muon_range.o
 
-ECOMUG_OBJS = ecomug.o test_ecomug.o
+ECOMUG_OBJS = randn.o ecomug.o test_ecomug.o
 
 PROP_OBJS   = randn.o corset.o corgen.o music-sr.o ecomug.o muon_prop_200m.o
 
