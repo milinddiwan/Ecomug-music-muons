@@ -1,4 +1,4 @@
-module ecomug2_mod
+module ecomug_mod
     ! ECoMUG-based cosmic muon flux and Monte Carlo generator.
     !
     ! Provides sea-level and shallow-depth flux functions, plus
@@ -219,4 +219,4 @@ contains
         phi = u * 2.0d0 * PI
     end subroutine gen_horiz_step
 
-end module ecomug2_mod
+end module ecomug_mod
